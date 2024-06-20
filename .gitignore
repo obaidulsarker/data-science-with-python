@@ -1,2 +1,3 @@
 GHI/models/*.*
 GHI/data/images/*.*
+GHI/hyperparameter_tuning/*
