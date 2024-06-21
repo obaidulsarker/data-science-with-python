@@ -3,10 +3,11 @@ import numpy as np
 import cv2
 import joblib
 from PIL import Image
+import os
 
 
 # Load the trained model
-model_path = 'models/tuned_ghi_prediction_model.pkl'
+model_path = 'GHI/models/tuned_ghi_prediction_model.pkl'
 model = joblib.load(model_path)
 
 image_size = (128, 128) 
@@ -29,19 +30,25 @@ def main():
     # File uploader
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
     
-    work_dir='data/images'
-    
+    work_dir='data'
+    if not os.path.exists(work_dir):
+        os.makedirs(work_dir)
+
     if uploaded_file is not None:
         # Display the uploaded image
         image = Image.open(uploaded_file)
         file_name=uploaded_file.name
        
-    
         st.image(image, caption='Uploaded Image.', use_column_width=True)
         
         image_path =f'{work_dir}/{file_name}'
         st.write(image_path)
         
+        # Save the uploaded image
+        with open(os.path.join(work_dir, uploaded_file.name), "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        st.success(f"Saved file: {uploaded_file.name} to {work_dir}")
+
         # Preprocess the image
         preprocessed_image = preprocess_image(image_path)
         
